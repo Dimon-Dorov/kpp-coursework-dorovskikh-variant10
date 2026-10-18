@@ -1,0 +1,3 @@
+station_id;station_name;station_address;station_status;port_number;port_type;power
+1;Autoenterprise;Зіньківська вулиця, 6, Полтава, Полтавська область, 36000;АКТИВНА;3;CSS;60.0
+2;ECOFACTOR;Київське шосе, 41, Полтава, 36040;АКТИВНА;1;CHAdeMO;50.0
