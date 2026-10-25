@@ -47,8 +47,8 @@ INSERT INTO charging_module (station_id, port_number, port_type, power) VALUES
 (2, 1, 'CHAdeMO', 50.0);
 
 INSERT INTO incident (module_id, state, f1, f2, f3, integral_index) VALUES
-(1, 'ЗАФІКСОВАНО', 80.0, 60.0, 40.0, 63.0),
-(3, 'РЕМОНТ', 30.0, 90.0, 10.0, 46.0);
+(1, 'REPORTED', 80.0, 60.0, 40.0, 63.0),
+(3, 'REPAIR', 30.0, 90.0, 10.0, 46.0);
 
 INSERT INTO repair_task (incident_id, description, planned_date) VALUES
 (2, 'Заміна контактора та перевірка силового кабелю CHAdeMO', '02.12.2026');
