@@ -66,8 +66,8 @@ public class IncidentService {
         if (i == null || i.getModuleId() <= 0) {
             throw new IllegalArgumentException("Некоректні основні дані інциденту");
         }
-        if (i.getF2() < 0 || i.getF2() > 100 || i.getF3() < 0 || i.getF3() > 100) {
-            throw new IllegalArgumentException("Фактори F2 та F3 мають бути в діапазоні 0..100");
+        if (i.getF1() < 0 || i.getF1() > 100 || i.getF2() < 0 || i.getF2() > 100 || i.getF3() < 0 || i.getF3() > 100) {
+            throw new IllegalArgumentException("Фактори F1, F2 та F3 мають бути в діапазоні 0..100");
         }
     }
 
