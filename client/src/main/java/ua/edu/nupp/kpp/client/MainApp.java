@@ -314,12 +314,16 @@ public class MainApp extends Application {
     private void testCsvImport() {
         try {
             Path file = Path.of("sample-data", "stations_modules.csv");
+            if (!java.nio.file.Files.exists(file)) {
+                LOG.warning("Файл CSV не знайдено: " + file.toAbsolutePath());
+                return;
+            }
             java.util.List<String> lines = java.nio.file.Files.readAllLines(file);
-            if (lines.size() > 1) {
-                String[] p = lines.get(1).split(";");
-
+            for (int i = 1; i < lines.size(); i++) {
+                String line = lines.get(i).trim();
+                if (line.isEmpty()) continue;
+                String[] p = line.split(";");
                 if (p.length == 7) {
-                    long stationId = Long.parseLong(p[0].trim());
                     String stationName = p[1].trim();
                     String stationAddress = p[2].trim();
                     String stationStatus = p[3].trim();
@@ -328,13 +332,23 @@ public class MainApp extends Application {
                     double power = Double.parseDouble(p[6].trim());
                     Station s = new Station(null, stationName, stationAddress, stationStatus);
                     api.addStation(s);
-                    ChargingModule m = new ChargingModule(null, stationId, portNumber, portType, power);
-                    api.addModule(m);
-                    System.out.println("Тестовий рядок успішно імпортовано!");
+
+                    java.util.List<Station> currentStations = api.getStations();
+                    Long actualStationId = currentStations.stream()
+                            .filter(st -> stationName.equals(st.getName()))
+                            .map(Station::getId)
+                            .reduce((first, second) -> second)
+                            .orElse(null);
+
+                    if (actualStationId != null) {
+                        ChargingModule m = new ChargingModule(null, actualStationId, portNumber, portType, power);
+                        api.addModule(m);
+                    }
                 } else {
-                    LOG.warning("Невірна кількість полів у рядку CSV");
+                    LOG.warning("Невірна кількість полів у рядку CSV №" + (i + 1));
                 }
             }
+            System.out.println("CSV успішно імпортовано!");
         } catch (Exception e) {
             LOG.warning("Помилка імпорту CSV: " + e.getMessage());
             showError(e);

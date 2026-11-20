@@ -62,12 +62,15 @@ public class RepairTaskServlet extends HttpServlet {
     }
 
     private void writeError(HttpServletResponse resp, Exception e) throws IOException {
-        if (e instanceof IllegalArgumentException || e instanceof SQLException) {
-            resp.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-        } else {
-            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-        }
-        writeJson(resp, Map.of("error", e.getMessage() == null ? "Помилка" : e.getMessage()));
+        boolean clientError = e instanceof IllegalArgumentException;
+        int status = clientError
+                ? HttpServletResponse.SC_BAD_REQUEST
+                : HttpServletResponse.SC_INTERNAL_SERVER_ERROR;
+        String message = clientError
+                ? (e.getMessage() == null ? "Некоректний запит" : e.getMessage())
+                : "Внутрішня помилка сервера";
+        resp.setStatus(status);
+        writeJson(resp, Map.of("error", message));
     }
 
     private long id(HttpServletRequest req) {
